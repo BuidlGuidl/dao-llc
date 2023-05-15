@@ -95,7 +95,7 @@ const Home: NextPage = () => {
   return (
     <div className="bg-primary flex flex-col items-center">
       <Head>
-        <title>BuidlGidl DAO LLC</title>
+        <title>BuidlGuidl DAO LLC</title>
         <meta name="BuidlGidl DAO LLC" content="BuidlGuidl DAO LLC Constitution & Governance" />
       </Head>
       <Information />
