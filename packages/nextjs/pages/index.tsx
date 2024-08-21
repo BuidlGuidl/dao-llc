@@ -27,8 +27,8 @@ const Home: NextPage = () => {
           </p>
 
           <p>
-            BuidlGuidl DAO (LLC) exists to fund developers building generic tutorials, components, and prototypes
-            improve the 🏗 scaffold-eth and greater Ethereum ecosystem.
+            BuidlGuidl DAO (LLC) exists to fund developers building intentional tutorials, components, and projects to
+            improve 🏗 scaffold-eth and the greater Ethereum ecosystem.
           </p>
 
           <p>The BuidlGuidl DAO is member managed, utilizing a Safe smart contract at address:</p>
@@ -38,25 +38,20 @@ const Home: NextPage = () => {
           </Link>
 
           <p>
-            Members vote to send funds to 🏰 BuidlGuidl developers via streams and scholarships. Members can also to
-            grant funds to external developers and educators who are enriching the ecosystem. All voting allotment
-            allotment will take place in the Safe.
+            Members vote to send funds to 🏰 BuidlGuidl developers via streams and scholarships. Members can also vote
+            to grant funds to external developers and educators who are enriching the ecosystem. All voting will take
+            place in the Safe.
           </p>
 
           <p>
-            Proposals to change the Constitution, Governance, or update the DAO in any way may only be introduced
-            current members. There are no fees associated with being a member, and any members who leave the entitled to
+            Proposals to change the Constitution, Governance, or update the DAO in any way may only be introduced by
+            current members. There are no fees associated with being a member, and any members who leave are not
             entitled to any funding in the smart contract.
           </p>
 
           <p>A 4 out of 10 vote is required to add or remove members or pass an active proposal.</p>
 
           <p>DAO members all have equal voting rights.</p>
-
-          <p>
-            The DAO will do its best to keep developers&apos; ETH streams on{" "}
-            <a href="https://buidlguidl.com">🏰 BuidlGuidl.com</a> full and flowing.
-          </p>
 
           <p>
             <b>Keep 🛠 Buidling</b>
