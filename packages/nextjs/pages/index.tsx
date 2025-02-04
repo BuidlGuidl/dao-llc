@@ -6,16 +6,14 @@ import { Address } from "~~/components/scaffold-eth";
 
 const Home: NextPage = () => {
   const owners: Array<string> = [
-    "0x2dDC12E691F44f12A4BF5650317321fd996fB2F2",
-    "0x2D143b3Ae28Fa31E7c821D138c58c32A30aA36Ae",
-    "0x60583563D5879C2E59973E5718c7DE2147971807",
     "0x34aA3F359A9D614239015126635CE7732c18fDF3",
-    "0x60Ca282757BA67f3aDbF21F3ba2eBe4Ab3eb01fc",
+    "0x630ddBE2a248e6F483FD021C13617421b476aE92",
+    "0x11E91FB4793047a68dFff29158387229eA313ffE",
+    "0x466bfA89bC742c840bc4660890D679d96D65613c",
+    "0xB4F53bd85c00EF22946d24Ae26BC38Ac64F5E7B1",
+    "0x699bFaC97c962db31238B429cEaF6734C492d61C",
+    "0x5f97Cf9DD2cb7b53C47f6b1c26Ab4Bd143325d45",
     "0xf7e89E45502890381F9242403eA8661fad89Ca79",
-    "0x5c43B1eD97e52d009611D89b74fA829FE4ac56b1",
-    "0x38F84e92B468a1885e73CedC9A4d5632DE07EABB",
-    "0x2DdA8dc2f67f1eB94b250CaEFAc9De16f70c5A51",
-    "0x775aF9b7c214Fe8792aB5f5da61a8708591d517E",
   ];
 
   function Information() {
@@ -33,8 +31,8 @@ const Home: NextPage = () => {
 
           <p>The BuidlGuidl DAO is member managed, utilizing a Safe smart contract at address:</p>
 
-          <Link href="https://etherscan.io/address/0x0eb2AB241210900Aeac2fbA054dD605355fe2490" target="_blank">
-            <button className="btn btn-primary">0x0eb2AB241210900Aeac2fbA054dD605355fe2490</button>
+          <Link href="https://etherscan.io/address/0xeF899e80aA814ab8D8e232f9Ed6403A633C727ec" target="_blank">
+            <button className="btn btn-primary">0xeF899e80aA814ab8D8e232f9Ed6403A633C727ec</button>
           </Link>
 
           <p>
@@ -49,7 +47,7 @@ const Home: NextPage = () => {
             entitled to any funding in the smart contract.
           </p>
 
-          <p>A 4 out of 10 vote is required to add or remove members or pass an active proposal.</p>
+          <p>A 4 out of 8 vote is required to add or remove members or pass an active proposal.</p>
 
           <p>DAO members all have equal voting rights.</p>
 
@@ -67,7 +65,7 @@ const Home: NextPage = () => {
         <div className="bg-secondary my-16 text-center rounded-lg">
           <div>
             <div className="py-12 font-bold text-2xl">
-              <Link href="https://etherscan.io/address/0x0eb2AB241210900Aeac2fbA054dD605355fe2490" target="_blank">
+              <Link href="https://etherscan.io/address/0xeF899e80aA814ab8D8e232f9Ed6403A633C727ec" target="_blank">
                 <button className="btn btn-primary">dao.buidlguidl.eth</button>
               </Link>
             </div>
