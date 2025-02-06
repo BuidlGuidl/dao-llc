@@ -90,6 +90,7 @@ const Home: NextPage = () => {
       <Head>
         <title>BuidlGuidl DAO LLC</title>
         <meta name="BuidlGidl DAO LLC" content="BuidlGuidl DAO LLC Constitution & Governance" />
+        <script defer data-domain="dao.buidlguidl.com" src="https://plausible.io/js/script.js"></script>
       </Head>
       <Information />
       <Members />
