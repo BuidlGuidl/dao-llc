@@ -1,19 +1,10 @@
-import scaffoldConfig from "~~/scaffold.config";
-import { useGlobalState } from "~~/services/store/store";
-import { AllowedChainIds } from "~~/utils/scaffold-eth";
-import { ChainWithAttributes, NETWORKS_EXTRA_DATA } from "~~/utils/scaffold-eth/networks";
+import { useTargetNetwork } from "./useTargetNetwork";
 
 /**
- * Given a chainId, retrives the network object from `scaffold.config`,
- * if not found default to network set by `useTargetNetwork` hook
+ * Hook to get the selected network.
+ * Note: Wallet functionality has been removed, so this returns the target network.
  */
-export function useSelectedNetwork(chainId?: AllowedChainIds): ChainWithAttributes {
-  const globalTargetNetwork = useGlobalState(({ targetNetwork }) => targetNetwork);
-  const targetNetwork = scaffoldConfig.targetNetworks.find(targetNetwork => targetNetwork.id === chainId);
-
-  if (targetNetwork) {
-    return { ...targetNetwork, ...NETWORKS_EXTRA_DATA[targetNetwork.id] };
-  }
-
-  return globalTargetNetwork;
-}
+export const useSelectedNetwork = (chainId?: number) => {
+  const { targetNetwork } = useTargetNetwork();
+  return targetNetwork;
+};

@@ -1,24 +1,17 @@
-import { useEffect, useMemo } from "react";
-import { useAccount } from "wagmi";
+import { useMemo } from "react";
 import scaffoldConfig from "~~/scaffold.config";
-import { useGlobalState } from "~~/services/store/store";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
 import { NETWORKS_EXTRA_DATA } from "~~/utils/scaffold-eth";
 
 /**
- * Retrieves the connected wallet's network from scaffold.config or defaults to the 0th network in the list if the wallet is not connected.
+ * Returns the target network from scaffold.config.
+ * Note: Wallet functionality has been removed, so this returns the first configured network.
  */
 export function useTargetNetwork(): { targetNetwork: ChainWithAttributes } {
-  const { chain } = useAccount();
-  const targetNetwork = useGlobalState(({ targetNetwork }) => targetNetwork);
-  const setTargetNetwork = useGlobalState(({ setTargetNetwork }) => setTargetNetwork);
+  const targetNetwork = useMemo(() => {
+    const network = scaffoldConfig.targetNetworks[0];
+    return { ...network, ...NETWORKS_EXTRA_DATA[network.id] };
+  }, []);
 
-  useEffect(() => {
-    const newSelectedNetwork = scaffoldConfig.targetNetworks.find(targetNetwork => targetNetwork.id === chain?.id);
-    if (newSelectedNetwork && newSelectedNetwork.id !== targetNetwork.id) {
-      setTargetNetwork({ ...newSelectedNetwork, ...NETWORKS_EXTRA_DATA[newSelectedNetwork.id] });
-    }
-  }, [chain?.id, setTargetNetwork, targetNetwork.id]);
-
-  return useMemo(() => ({ targetNetwork }), [targetNetwork]);
+  return { targetNetwork };
 }
