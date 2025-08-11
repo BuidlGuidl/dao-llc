@@ -14,7 +14,7 @@ export async function GET() {
     }
 
     const safeData = await safeResponse.json();
-    
+
     if (safeData.results && safeData.results.length > 0) {
       // Process Safe transactions
       const processedTransactions = safeData.results.map((tx: any) => ({
@@ -49,7 +49,7 @@ export async function GET() {
             const internalResponse = await fetch(
               `https://api.etherscan.io/api?module=account&action=txlistinternal&txhash=${tx.hash}&apikey=S1IH9Y6MS44HNJXERBSBZHWX8I5C7VJ4FM`,
             );
-            
+
             if (internalResponse.ok) {
               const internalData = await internalResponse.json();
               if (internalData.status === "1" && internalData.result) {
@@ -59,9 +59,9 @@ export async function GET() {
           } catch (error) {
             console.error(`Error fetching internal transactions for ${tx.hash}:`, error);
           }
-          
+
           return tx;
-        })
+        }),
       );
 
       return NextResponse.json({ transactions: transactionsWithInternals });

@@ -40,7 +40,7 @@ export const ContractTabs = ({ address, contractData }: PageProps) => {
   }, [address]);
 
   const filteredBlocks = blocks.filter(block =>
-    block.transactions.some(tx => {
+    block.transactions.some((tx: any) => {
       if (typeof tx === "string") {
         return false;
       }

@@ -27,7 +27,7 @@ export const Faucet = () => {
   const [sendValue, setSendValue] = useState("");
 
   // const { chain: ConnectedChain } = useAccount(); // Removed wagmi dependency
-  const ConnectedChain = null; // Placeholder since we removed wallet functionality
+  const ConnectedChain: any = null; // Placeholder since we removed wallet functionality
 
   const faucetTxn = useTransactor(localWalletClient);
 
@@ -76,7 +76,7 @@ export const Faucet = () => {
   };
 
   // Render only on local chain
-  if (ConnectedChain?.id !== hardhat.id) {
+  if (ConnectedChain && ConnectedChain.id !== hardhat.id) {
     return null;
   }
 

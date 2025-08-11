@@ -14,7 +14,7 @@ export async function GET() {
     }
 
     const safeData = await safeResponse.json();
-    
+
     const debugData: {
       safeApiResponse: any;
       processedTransactions: any[];
@@ -27,7 +27,7 @@ export async function GET() {
       // Process first 3 transactions with full data
       for (let i = 0; i < Math.min(3, safeData.results.length); i++) {
         const tx = safeData.results[i];
-        
+
         const transactionData = {
           originalSafeData: tx,
           processedData: {
@@ -71,7 +71,7 @@ export async function GET() {
           const internalResponse = await fetch(
             `https://api.etherscan.io/api?module=account&action=txlistinternal&txhash=${tx.transactionHash}&apikey=S1IH9Y6MS44HNJXERBSBZHWX8I5C7VJ4FM`,
           );
-          
+
           if (internalResponse.ok) {
             const internalData = await internalResponse.json();
             transactionData.processedData.internalTransactions = internalData;

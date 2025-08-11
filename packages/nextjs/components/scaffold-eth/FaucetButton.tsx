@@ -6,6 +6,7 @@ import { hardhat } from "viem/chains";
 // import { useAccount } from "wagmi"; // Removed wagmi dependency
 import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { useTransactor } from "~~/hooks/scaffold-eth";
+
 // import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance"; // Removed - not used
 
 // Number of ETH faucet sends to an address
@@ -23,9 +24,9 @@ const localWalletClient = createWalletClient({
 export const FaucetButton = () => {
   // const { address, chain: ConnectedChain } = useAccount(); // Removed wagmi dependency
   // const { data: balance } = useWatchBalance({ address }); // Removed wagmi dependency
-  const address = null; // Placeholder since we removed wallet functionality
-  const ConnectedChain = null; // Placeholder since we removed wallet functionality
-  const balance = null; // Placeholder since we removed wallet functionality
+  const address: any = null; // Placeholder since we removed wallet functionality
+  const ConnectedChain: any = null; // Placeholder since we removed wallet functionality
+  const balance: any = null; // Placeholder since we removed wallet functionality
 
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +53,7 @@ export const FaucetButton = () => {
     return null;
   }
 
-  const isBalanceZero = balance && balance.value === 0n;
+  const isBalanceZero = balance?.value === 0n;
 
   return (
     <div

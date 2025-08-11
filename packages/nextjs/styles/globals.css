@@ -2,24 +2,24 @@
 
 /* PP Neue Machina font - local files */
 @font-face {
-  font-family: 'PP Neue Machina';
-  src: url('/fonts/PPNeueMachina-Light.otf') format('opentype');
+  font-family: "PP Neue Machina";
+  src: url("/fonts/PPNeueMachina-Light.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'PP Neue Machina';
-  src: url('/fonts/PPNeueMachina-Regular.otf') format('opentype');
+  font-family: "PP Neue Machina";
+  src: url("/fonts/PPNeueMachina-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'PP Neue Machina';
-  src: url('/fonts/PPNeueMachina-Ultrabold.otf') format('opentype');
+  font-family: "PP Neue Machina";
+  src: url("/fonts/PPNeueMachina-Ultrabold.otf") format("opentype");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -43,21 +43,21 @@
 @plugin "daisyui/theme" {
   name: "light";
 
-  --color-primary: #808CFF;
+  --color-primary: #808cff;
   --color-primary-content: #ffffff;
-  --color-secondary: #D8DCFF;
+  --color-secondary: #d8dcff;
   --color-secondary-content: #212638;
-  --color-accent: #FF6E1D;
+  --color-accent: #ff6e1d;
   --color-accent-content: #ffffff;
   --color-neutral: #212638;
   --color-neutral-content: #ffffff;
   --color-base-100: #ffffff;
-  --color-base-200: #D8DCFF;
-  --color-base-300: #9FA9FF;
+  --color-base-200: #d8dcff;
+  --color-base-300: #9fa9ff;
   --color-base-content: #212638;
-  --color-info: #808CFF;
+  --color-info: #808cff;
   --color-success: #34eeb6;
-  --color-warning: #FFD4B5;
+  --color-warning: #ffd4b5;
   --color-error: #ff8863;
 
   --radius-field: 9999rem;
@@ -68,11 +68,11 @@
 @plugin "daisyui/theme" {
   name: "dark";
 
-  --color-primary: #808CFF;
+  --color-primary: #808cff;
   --color-primary-content: #ffffff;
-  --color-secondary: #D8DCFF;
+  --color-secondary: #d8dcff;
   --color-secondary-content: #212638;
-  --color-accent: #FF6E1D;
+  --color-accent: #ff6e1d;
   --color-accent-content: #ffffff;
   --color-neutral: #f9fbff;
   --color-neutral-content: #385183;
@@ -80,9 +80,9 @@
   --color-base-200: #2a3655;
   --color-base-300: #212638;
   --color-base-content: #f9fbff;
-  --color-info: #808CFF;
+  --color-info: #808cff;
   --color-success: #34eeb6;
-  --color-warning: #FFD4B5;
+  --color-warning: #ffd4b5;
   --color-error: #ff8863;
 
   --radius-field: 9999rem;
@@ -115,7 +115,7 @@
 
   body {
     min-height: 100vh;
-    font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+    font-family: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   }
 
   h1,
@@ -150,32 +150,44 @@
 
 /* Font utility classes */
 .font-display {
-  font-family: 'PP Neue Machina', var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: "PP Neue Machina", var(--font-inter), "Inter", system-ui, sans-serif;
   font-weight: 800;
 }
 
 .font-display-light {
-  font-family: 'PP Neue Machina', var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: "PP Neue Machina", var(--font-inter), "Inter", system-ui, sans-serif;
   font-weight: 300;
 }
 
 .font-display-regular {
-  font-family: 'PP Neue Machina', var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: "PP Neue Machina", var(--font-inter), "Inter", system-ui, sans-serif;
   font-weight: 400;
 }
 
 .font-body {
-  font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+  font-family: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
 }
 
 /* Apply PP Neue Machina to headings */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'PP Neue Machina', var(--font-inter), 'Inter', system-ui, sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "PP Neue Machina", var(--font-inter), "Inter", system-ui, sans-serif;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 /* Apply Space Grotesk to body text */
-p, span, div, a, button, input, textarea, select {
-  font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
 }

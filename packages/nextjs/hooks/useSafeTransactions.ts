@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 interface Transaction {
   hash: string;
@@ -28,7 +28,7 @@ export const useSafeTransactions = (): UseSafeTransactionsReturn => {
   useEffect(() => {
     const fetchTransactions = async () => {
       // Only run on client side
-      if (typeof window === 'undefined') {
+      if (typeof window === "undefined") {
         return;
       }
 
@@ -37,17 +37,17 @@ export const useSafeTransactions = (): UseSafeTransactionsReturn => {
         setError(null);
 
         // Fetch transactions from our API route
-        const response = await fetch('/api/transactions');
+        const response = await fetch("/api/transactions");
         const data = await response.json();
 
         if (response.ok && data.transactions) {
           setTransactions(data.transactions);
         } else {
-          setError(data.error || 'Failed to fetch transactions');
+          setError(data.error || "Failed to fetch transactions");
         }
       } catch (err) {
-        setError('Failed to fetch transactions');
-        console.error('Error fetching transactions:', err);
+        setError("Failed to fetch transactions");
+        console.error("Error fetching transactions:", err);
       } finally {
         setLoading(false);
       }

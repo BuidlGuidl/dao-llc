@@ -17,8 +17,9 @@ const inter = Inter({
 });
 
 export const metadata = getMetadata({
-  title: "Scaffold-ETH 2 App",
-  description: "Built with 🏗 Scaffold-ETH 2",
+  title: "BuidlGuidl DAO",
+  description:
+    "Fund developers building intentional tutorials, components, and projects to improve scaffold-eth and the greater Ethereum ecosystem.",
 });
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {

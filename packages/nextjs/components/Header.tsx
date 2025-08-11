@@ -73,8 +73,7 @@ export const Header = () => {
             <Image alt="DAO logo" className="cursor-pointer object-contain" fill src="/logo.png" />
           </div>
           <div className="flex flex-col gap-0">
-            <span className="font-bold leading-tight text-sm">BuidlGuidl DAO LLC</span>
-            <span className="text-xs">🤠 Registered Wyoming DAO LLC 2021-001041159</span>
+            <span className="font-bold leading-tight text-lg">BuidlGuidl DAO LLC</span>
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">

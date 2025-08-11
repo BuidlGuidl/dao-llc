@@ -1,16 +1,11 @@
-import { Address } from "viem";
-
-type UseScaffoldContractConfig = {
-  contractName: string;
-  walletClient?: any;
-};
-
 /**
  * Hook to get contract instance.
  * Note: Wallet functionality has been removed, so this returns null.
  */
-export const useScaffoldContract = <TContractName extends string>({
-  contractName,
-}: UseScaffoldContractConfig) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const useScaffoldContract = <TContractName extends string>(config: {
+  contractName: string;
+  walletClient?: any;
+}) => {
   return null;
 };
