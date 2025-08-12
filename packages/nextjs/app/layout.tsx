@@ -25,6 +25,9 @@ export const metadata = getMetadata({
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning className={`${spaceGrotesk.variable} ${inter.variable}`}>
+      <head>
+        <script defer data-domain="dao.buidlguidl.com" src="https://plausible.io/js/script.outbound-links.js"></script>
+      </head>
       <body suppressHydrationWarning>
         <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
