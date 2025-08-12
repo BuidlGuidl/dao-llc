@@ -56,40 +56,101 @@ export async function GET() {
       }));
 
       // Fetch internal transactions and executor for each Safe transaction
-      const transactionsWithInternals = await Promise.all(
-        processedTransactions.map(async (tx: any) => {
-          try {
-            // Fetch internal transactions
-            const internalResponse = await fetch(
-              `https://api.etherscan.io/api?module=account&action=txlistinternal&txhash=${tx.transactionHash}&apikey=S1IH9Y6MS44HNJXERBSBZHWX8I5C7VJ4FM`,
-            );
+      // Process sequentially to respect Etherscan rate limit (5 calls/sec)
+      const transactionsWithInternals = [];
 
-            if (internalResponse.ok) {
-              const internalData = await internalResponse.json();
-              if (internalData.status === "1" && internalData.result) {
-                tx.internalTransactions = internalData.result;
+      for (const tx of processedTransactions) {
+        try {
+          // Fetch internal transactions with retry logic - only if we have a transaction hash
+          if (tx.transactionHash) {
+            console.log(`Fetching internal transactions for ${tx.nonce} (${tx.transactionHash})`);
+
+            // Rate limiting: Wait 200ms between calls (max 5/sec)
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            // Retry logic for Etherscan API (reduce retries since we're rate limiting)
+            let retries = 2;
+            let success = false;
+
+            while (retries > 0 && !success) {
+              try {
+                // Create AbortController for timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                const internalResponse = await fetch(
+                  `https://api.etherscan.io/api?module=account&action=txlistinternal&txhash=${tx.transactionHash}&apikey=S1IH9Y6MS44HNJXERBSBZHWX8I5C7VJ4FM`,
+                  {
+                    signal: controller.signal,
+                  },
+                );
+
+                clearTimeout(timeoutId);
+
+                if (internalResponse.ok) {
+                  const internalData = await internalResponse.json();
+                  console.log(`Etherscan response for nonce ${tx.nonce} (attempt ${4 - retries}):`, {
+                    status: internalData.status,
+                    message: internalData.message,
+                    resultCount: internalData.result ? internalData.result.length : 0,
+                  });
+
+                  if (internalData.status === "1" && internalData.result) {
+                    tx.internalTransactions = internalData.result;
+                    success = true;
+                  } else {
+                    console.warn(`No internal transactions for nonce ${tx.nonce}:`, internalData.message);
+                    tx.internalTransactions = [];
+                    success = true; // Don't retry if API says no results
+                  }
+                } else {
+                  console.error(
+                    `Etherscan API failed for nonce ${tx.nonce} (attempt ${4 - retries}):`,
+                    internalResponse.status,
+                    internalResponse.statusText,
+                  );
+                  retries--;
+                  if (retries > 0) {
+                    console.log(`Retrying in 500ms... (${retries} attempts left)`);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                  } else {
+                    tx.internalTransactions = [];
+                  }
+                }
+              } catch (error) {
+                console.error(`Etherscan API error for nonce ${tx.nonce} (attempt ${4 - retries}):`, error);
+                retries--;
+                if (retries > 0) {
+                  console.log(`Retrying in 500ms... (${retries} attempts left)`);
+                  await new Promise(resolve => setTimeout(resolve, 500));
+                } else {
+                  tx.internalTransactions = [];
+                }
               }
             }
-
-            // For Safe transactions, prioritize proposer, fallback to executor
-            if (tx.proposer && typeof tx.proposer === "string" && tx.proposer.trim() !== "") {
-              tx.actualExecutor = tx.proposer;
-              tx.executorType = "proposer"; // Flag to show "Proposed by"
-            } else if (tx.executor && typeof tx.executor === "string" && tx.executor.trim() !== "") {
-              tx.actualExecutor = tx.executor;
-              tx.executorType = "executor"; // Flag to show "Executed by"
-            } else {
-              // If neither proposer nor executor, hide the line
-              tx.actualExecutor = null;
-              tx.executorType = null;
-            }
-          } catch (error) {
-            console.error(`Error fetching transaction data for ${tx.transactionHash}:`, error);
+          } else {
+            console.warn(`No transaction hash for nonce ${tx.nonce}, skipping internal transactions`);
+            tx.internalTransactions = [];
           }
 
-          return tx;
-        }),
-      );
+          // For Safe transactions, prioritize proposer, fallback to executor
+          if (tx.proposer && typeof tx.proposer === "string" && tx.proposer.trim() !== "") {
+            tx.actualExecutor = tx.proposer;
+            tx.executorType = "proposer"; // Flag to show "Proposed by"
+          } else if (tx.executor && typeof tx.executor === "string" && tx.executor.trim() !== "") {
+            tx.actualExecutor = tx.executor;
+            tx.executorType = "executor"; // Flag to show "Executed by"
+          } else {
+            // If neither proposer nor executor, hide the line
+            tx.actualExecutor = null;
+            tx.executorType = null;
+          }
+        } catch (error) {
+          console.error(`Error fetching transaction data for ${tx.transactionHash}:`, error);
+        }
+
+        transactionsWithInternals.push(tx);
+      }
 
       return NextResponse.json({ transactions: transactionsWithInternals });
     } else {

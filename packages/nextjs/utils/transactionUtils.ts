@@ -209,40 +209,60 @@ const resolveENSName = (address: string): string => {
 };
 
 export const getTransactionAmount = (transaction: any): string => {
-  // Check if this is a DAI transaction to ETH Streams
-  if (transaction.to && transaction.to.toLowerCase() === "0x6b175474e89094c44da98b954eedeac495271d0f") {
-    // For DAI transactions, we need to parse the transaction data to get the amount
-    if (transaction.dataDecoded && transaction.dataDecoded.parameters) {
-      // Look for common parameter names that might contain the DAI amount
-      const valueParam = transaction.dataDecoded.parameters.find(
-        (param: any) =>
-          param.name === "value" ||
-          param.name === "amount" ||
-          param.name === "_value" ||
-          param.name === "wad" ||
-          param.name === "_amount" ||
-          param.name === "tokens",
-      );
+  try {
+    // Check if this is a DAI transaction to ETH Streams
+    if (transaction.to && transaction.to.toLowerCase() === "0x6b175474e89094c44da98b954eedeac495271d0f") {
+      // For DAI transactions, we need to parse the transaction data to get the amount
+      if (transaction.dataDecoded && transaction.dataDecoded.parameters) {
+        // Look for common parameter names that might contain the DAI amount
+        const valueParam = transaction.dataDecoded.parameters.find(
+          (param: any) =>
+            param.name === "value" ||
+            param.name === "amount" ||
+            param.name === "_value" ||
+            param.name === "wad" ||
+            param.name === "_amount" ||
+            param.name === "tokens",
+        );
 
-      if (valueParam && valueParam.value) {
-        // Convert from DAI wei (18 decimals) to DAI
-        const daiAmount = parseFloat(valueParam.value) / Math.pow(10, 18);
-        return Math.round(daiAmount).toLocaleString("en-US");
+        if (valueParam && valueParam.value) {
+          // Convert from DAI wei (18 decimals) to DAI
+          const daiAmount = parseFloat(valueParam.value) / Math.pow(10, 18);
+          if (!isNaN(daiAmount)) {
+            return Math.round(daiAmount).toLocaleString("en-US");
+          }
+        }
+      }
+
+      // Fallback for DAI transactions without decoded data
+      console.warn(`DAI transaction missing decoded data for nonce ${transaction.nonce}`);
+      return "0";
+    }
+
+    // Check for internal transactions first (these contain the actual amounts)
+    if (transaction.internalTransactions && transaction.internalTransactions.length > 0) {
+      const internal = transaction.internalTransactions[0];
+      if (internal && internal.value && internal.value !== "0") {
+        const amount = formatEther(internal.value);
+        if (amount && amount !== "NaN") {
+          return amount;
+        }
       }
     }
 
-    // Fallback for DAI transactions without decoded data
-    return "0";
-  }
-
-  // Check for internal transactions first (these contain the actual amounts)
-  if (transaction.internalTransactions && transaction.internalTransactions.length > 0) {
-    const internal = transaction.internalTransactions[0];
-    if (internal.value && internal.value !== "0") {
-      return formatEther(internal.value);
+    // Fallback to main transaction value
+    if (transaction.value) {
+      const amount = formatEther(transaction.value);
+      if (amount && amount !== "NaN") {
+        return amount;
+      }
     }
-  }
 
-  // Fallback to main transaction value
-  return formatEther(transaction.value);
+    // Final fallback
+    console.warn(`Unable to determine amount for transaction nonce ${transaction.nonce}`);
+    return "0.00";
+  } catch (error) {
+    console.error(`Error calculating transaction amount for nonce ${transaction.nonce}:`, error);
+    return "0.00";
+  }
 };
