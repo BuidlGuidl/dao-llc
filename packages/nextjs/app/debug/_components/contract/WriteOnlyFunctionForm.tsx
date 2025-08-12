@@ -4,20 +4,21 @@ import { useEffect, useState } from "react";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { Abi, AbiFunction } from "abitype";
 import { Address, TransactionReceipt } from "viem";
-import { useAccount, useConfig, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+// import { useAccount, useConfig, useWaitForTransactionReceipt, useWriteContract } from "wagmi"; // Removed wagmi dependency
 import {
   ContractInput,
   TxReceipt,
   getFunctionInputKey,
-  getInitialFormState,
-  getParsedContractFunctionArgs,
+  getInitialFormState, // getParsedContractFunctionArgs,
   transformAbiFunction,
 } from "~~/app/debug/_components/contract";
 import { IntegerInput } from "~~/components/scaffold-eth";
-import { useTransactor } from "~~/hooks/scaffold-eth";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { AllowedChainIds } from "~~/utils/scaffold-eth";
-import { simulateContractWriteAndNotifyError } from "~~/utils/scaffold-eth/contract";
+
+// import { useTransactor } from "~~/hooks/scaffold-eth";
+// import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+// import { AllowedChainIds } from "~~/utils/scaffold-eth";
+
+// import { simulateContractWriteAndNotifyError } from "~~/utils/scaffold-eth/contract";
 
 type WriteOnlyFunctionFormProps = {
   abi: Abi;
@@ -28,55 +29,41 @@ type WriteOnlyFunctionFormProps = {
 };
 
 export const WriteOnlyFunctionForm = ({
-  abi,
+  // abi,
   abiFunction,
-  onChange,
-  contractAddress,
+  // onChange,
+  // contractAddress,
   inheritedFrom,
 }: WriteOnlyFunctionFormProps) => {
   const [form, setForm] = useState<Record<string, any>>(() => getInitialFormState(abiFunction));
   const [txValue, setTxValue] = useState<string>("");
-  const { chain } = useAccount();
-  const writeTxn = useTransactor();
-  const { targetNetwork } = useTargetNetwork();
-  const writeDisabled = !chain || chain?.id !== targetNetwork.id;
+  // const { chain } = useAccount();
+  // const writeTxn = useTransactor();
+  // const { targetNetwork } = useTargetNetwork();
+  // const writeDisabled = !chain || chain?.id !== targetNetwork.id;
+  const writeDisabled = true; // Disabled since wallet functionality removed
 
-  const { data: result, isPending, writeContractAsync } = useWriteContract();
+  // const { data: result, isPending, writeContractAsync } = useWriteContract();
+  // const result = null;
+  const isPending = false;
+  // const writeContractAsync = null;
 
-  const wagmiConfig = useConfig();
+  // const wagmiConfig = useConfig();
+  // const wagmiConfig = null;
 
   const handleWrite = async () => {
-    if (writeContractAsync) {
-      try {
-        const writeContractObj = {
-          address: contractAddress,
-          functionName: abiFunction.name,
-          abi: abi,
-          args: getParsedContractFunctionArgs(form),
-          value: BigInt(txValue),
-        };
-        await simulateContractWriteAndNotifyError({
-          wagmiConfig,
-          writeContractParams: writeContractObj,
-          chainId: targetNetwork.id as AllowedChainIds,
-        });
-
-        const makeWriteWithParams = () => writeContractAsync(writeContractObj);
-        await writeTxn(makeWriteWithParams);
-        onChange();
-      } catch (e: any) {
-        console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
-      }
-    }
+    // Wallet functionality removed - this function is disabled
+    console.log("Write functionality disabled - wallet not connected");
   };
 
   const [displayedTxResult, setDisplayedTxResult] = useState<TransactionReceipt>();
-  const { data: txResult } = useWaitForTransactionReceipt({
-    hash: result,
-  });
+  // const { data: txResult } = useWaitForTransactionReceipt({
+  //   hash: result,
+  // });
+  const txResult = null;
   useEffect(() => {
-    setDisplayedTxResult(txResult);
-  }, [txResult]);
+    // setDisplayedTxResult(txResult);
+  }, []);
 
   // TODO use `useMemo` to optimize also update in ReadOnlyFunctionForm
   const transformedFunction = transformAbiFunction(abiFunction);

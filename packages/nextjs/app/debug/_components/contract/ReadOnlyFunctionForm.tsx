@@ -4,16 +4,15 @@ import { useEffect, useState } from "react";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { Abi, AbiFunction } from "abitype";
 import { Address } from "viem";
-import { useReadContract } from "wagmi";
+// import { useReadContract } from "wagmi"; // Removed wagmi dependency
 import {
   ContractInput,
   displayTxResult,
   getFunctionInputKey,
-  getInitialFormState,
-  getParsedContractFunctionArgs,
+  getInitialFormState, // getParsedContractFunctionArgs,
   transformAbiFunction,
 } from "~~/app/debug/_components/contract";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+// import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
 type ReadOnlyFunctionFormProps = {
@@ -24,26 +23,29 @@ type ReadOnlyFunctionFormProps = {
 };
 
 export const ReadOnlyFunctionForm = ({
-  contractAddress,
+  // contractAddress,
   abiFunction,
   inheritedFrom,
-  abi,
+  // abi,
 }: ReadOnlyFunctionFormProps) => {
   const [form, setForm] = useState<Record<string, any>>(() => getInitialFormState(abiFunction));
   const [result, setResult] = useState<unknown>();
-  const { targetNetwork } = useTargetNetwork();
+  // const { targetNetwork } = useTargetNetwork();
 
-  const { isFetching, refetch, error } = useReadContract({
-    address: contractAddress,
-    functionName: abiFunction.name,
-    abi: abi,
-    args: getParsedContractFunctionArgs(form),
-    chainId: targetNetwork.id,
-    query: {
-      enabled: false,
-      retry: false,
-    },
-  });
+  // const { isFetching, refetch, error } = useReadContract({
+  //   address: contractAddress,
+  //   functionName: abiFunction.name,
+  //   abi: abi,
+  //   args: getParsedContractFunctionArgs(form),
+  //   chainId: targetNetwork.id,
+  //   query: {
+  //     enabled: false,
+  //     retry: false,
+  //   },
+  // });
+  const isFetching = false;
+  const refetch = async () => ({ data: null });
+  const error = null;
 
   useEffect(() => {
     if (error) {

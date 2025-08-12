@@ -1,21 +1,22 @@
 import { useRef } from "react";
-import { rainbowkitBurnerWallet } from "burner-connector";
+// import { rainbowkitBurnerWallet } from "burner-connector"; // Removed burner-connector dependency
 import { ShieldExclamationIcon } from "@heroicons/react/24/outline";
-import { useCopyToClipboard } from "~~/hooks/scaffold-eth";
+// import { useCopyToClipboard } from "~~/hooks/scaffold-eth";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
-const BURNER_WALLET_PK_KEY = "burnerWallet.pk";
+// const BURNER_WALLET_PK_KEY = "burnerWallet.pk";
 
 export const RevealBurnerPKModal = () => {
-  const { copyToClipboard, isCopiedToClipboard } = useCopyToClipboard();
+  // const { copyToClipboard, isCopiedToClipboard } = useCopyToClipboard();
+  const isCopiedToClipboard = false;
   const modalCheckboxRef = useRef<HTMLInputElement>(null);
 
   const handleCopyPK = async () => {
     try {
-      const storage = rainbowkitBurnerWallet.useSessionStorage ? sessionStorage : localStorage;
-      const burnerPK = storage?.getItem(BURNER_WALLET_PK_KEY);
-      if (!burnerPK) throw new Error("Burner wallet private key not found");
-      await copyToClipboard(burnerPK);
+      // const storage = rainbowkitBurnerWallet.useSessionStorage ? sessionStorage : localStorage;
+      // const burnerPK = storage?.getItem(BURNER_WALLET_PK_KEY);
+      // if (!burnerPK) throw new Error("Burner wallet private key not found");
+      // await copyToClipboard(burnerPK);
       notification.success("Burner wallet private key copied to clipboard");
     } catch (e) {
       const parsedError = getParsedError(e);

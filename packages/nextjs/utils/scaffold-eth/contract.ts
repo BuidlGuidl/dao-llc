@@ -1,7 +1,7 @@
 import { getParsedError } from "./getParsedError";
 import { AllowedChainIds } from "./networks";
-import { notification } from "./notification";
-import { MutateOptions } from "@tanstack/react-query";
+// import { notification } from "./notification";
+// import { MutateOptions } from "@tanstack/react-query"; // Removed React Query dependency
 import {
   Abi,
   AbiParameter,
@@ -11,8 +11,8 @@ import {
   ExtractAbiEventNames,
   ExtractAbiFunction,
 } from "abitype";
-import type { ExtractAbiFunctionNames } from "abitype";
-import type { Simplify } from "type-fest";
+// import type { ExtractAbiFunctionNames } from "abitype";
+// import type { Simplify } from "type-fest";
 import type { MergeDeepRecord } from "type-fest/source/merge-deep";
 import {
   Address,
@@ -21,14 +21,13 @@ import {
   GetTransactionReceiptReturnType,
   GetTransactionReturnType,
   Log,
-  TransactionReceipt,
-  WriteContractErrorType,
+  TransactionReceipt, // WriteContractErrorType,
   keccak256,
   toHex,
 } from "viem";
-import { Config, UseReadContractParameters, UseWatchContractEventParameters, UseWriteContractParameters } from "wagmi";
-import { WriteContractParameters, WriteContractReturnType, simulateContract } from "wagmi/actions";
-import { WriteContractVariables } from "wagmi/query";
+// import { Config, UseReadContractParameters, UseWatchContractEventParameters, UseWriteContractParameters } from "wagmi"; // Removed wagmi dependency
+// import { WriteContractParameters, WriteContractReturnType, simulateContract } from "wagmi/actions"; // Removed wagmi dependency
+// import { WriteContractVariables } from "wagmi/query"; // Removed wagmi dependency
 import deployedContractsData from "~~/contracts/deployedContracts";
 import externalContractsData from "~~/contracts/externalContracts";
 import scaffoldConfig from "~~/scaffold.config";
@@ -151,119 +150,119 @@ export type FunctionNamesWithInputs<
   }
 >["name"];
 
-type Expand<T> = T extends object ? (T extends infer O ? { [K in keyof O]: O[K] } : never) : T;
+// type Expand<T> = T extends object ? (T extends infer O ? { [K in keyof O]: O[K] } : never) : T;
 
-type UnionToIntersection<U> = Expand<(U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never>;
+// type UnionToIntersection<U> = Expand<(U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never>;
 
-type OptionalTuple<T> = T extends readonly [infer H, ...infer R] ? readonly [H | undefined, ...OptionalTuple<R>] : T;
+// type OptionalTuple<T> = T extends readonly [infer H, ...infer R] ? readonly [H | undefined, ...OptionalTuple<R>] : T;
 
-type UseScaffoldArgsParam<
-  TContractName extends ContractName,
-  TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>>,
-> =
-  TFunctionName extends FunctionNamesWithInputs<TContractName>
-    ? {
-        args: OptionalTuple<UnionToIntersection<AbiFunctionArguments<ContractAbi<TContractName>, TFunctionName>>>;
-        value?: ExtractAbiFunction<ContractAbi<TContractName>, TFunctionName>["stateMutability"] extends "payable"
-          ? bigint | undefined
-          : undefined;
-      }
-    : {
-        args?: never;
-      };
+// type UseScaffoldArgsParam<
+//   TContractName extends ContractName,
+//   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>>,
+// > =
+//   TFunctionName extends FunctionNamesWithInputs<TContractName>
+//     ? {
+//         args: OptionalTuple<UnionToIntersection<AbiFunctionArguments<ContractAbi<TContractName>, TFunctionName>>>;
+//         value?: ExtractAbiFunction<ContractAbi<TContractName>, TFunctionName>["stateMutability"] extends "payable"
+//           ? bigint | undefined
+//           : undefined;
+//       }
+//     : {
+//         args?: never;
+//       };
 
 export type UseDeployedContractConfig<TContractName extends ContractName> = {
   contractName: TContractName;
   chainId?: AllowedChainIds;
 };
 
-export type UseScaffoldWriteConfig<TContractName extends ContractName> = {
-  contractName: TContractName;
-  chainId?: AllowedChainIds;
-  disableSimulate?: boolean;
-  writeContractParams?: UseWriteContractParameters;
-};
+// export type UseScaffoldWriteConfig<TContractName extends ContractName> = {
+//   contractName: TContractName;
+//   chainId?: AllowedChainIds;
+//   disableSimulate?: boolean;
+//   writeContractParams?: UseWriteContractParameters;
+// };
 
-export type UseScaffoldReadConfig<
-  TContractName extends ContractName,
-  TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, ReadAbiStateMutability>,
-> = {
-  contractName: TContractName;
-  chainId?: AllowedChainIds;
-  watch?: boolean;
-} & IsContractDeclarationMissing<
-  Partial<UseReadContractParameters>,
-  {
-    functionName: TFunctionName;
-  } & UseScaffoldArgsParam<TContractName, TFunctionName> &
-    Omit<UseReadContractParameters, "chainId" | "abi" | "address" | "functionName" | "args">
->;
+// export type UseScaffoldReadConfig<
+//   TContractName extends ContractName,
+//   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, ReadAbiStateMutability>,
+// > = {
+//   contractName: TContractName;
+//   chainId?: AllowedChainIds;
+//   watch?: boolean;
+// } & IsContractDeclarationMissing<
+//   Partial<UseReadContractParameters>,
+//   {
+//     functionName: TFunctionName;
+//   } & UseScaffoldArgsParam<TContractName, TFunctionName> &
+//     Omit<UseReadContractParameters, "chainId" | "abi" | "address" | "functionName" | "args">
+// >;
 
-export type ScaffoldWriteContractVariables<
-  TContractName extends ContractName,
-  TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, WriteAbiStateMutability>,
-> = IsContractDeclarationMissing<
-  Partial<WriteContractParameters>,
-  {
-    functionName: TFunctionName;
-  } & UseScaffoldArgsParam<TContractName, TFunctionName> &
-    Omit<WriteContractParameters, "chainId" | "abi" | "address" | "functionName" | "args">
->;
+// export type ScaffoldWriteContractVariables<
+//   TContractName extends ContractName,
+//   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, WriteAbiStateMutability>,
+// > = IsContractDeclarationMissing<
+//   Partial<WriteContractParameters>,
+//   {
+//     functionName: TFunctionName;
+//   } & UseScaffoldArgsParam<TContractName, TFunctionName> &
+//     Omit<WriteContractParameters, "chainId" | "abi" | "address" | "functionName" | "args">
+// >;
 
-type WriteVariables = WriteContractVariables<Abi, string, any[], Config, number>;
+// type WriteVariables = WriteContractVariables<Abi, string, any[], Config, number>;
 
 export type TransactorFuncOptions = {
   onBlockConfirmation?: (txnReceipt: TransactionReceipt) => void;
   blockConfirmations?: number;
 };
 
-export type ScaffoldWriteContractOptions = MutateOptions<
-  WriteContractReturnType,
-  WriteContractErrorType,
-  WriteVariables,
-  unknown
-> &
-  TransactorFuncOptions;
+// export type ScaffoldWriteContractOptions = MutateOptions<
+//   WriteContractReturnType,
+//   WriteContractErrorType,
+//   WriteVariables,
+//   unknown
+// > &
+//   TransactorFuncOptions;
 
-export type UseScaffoldEventConfig<
-  TContractName extends ContractName,
-  TEventName extends ExtractAbiEventNames<ContractAbi<TContractName>>,
-  TEvent extends ExtractAbiEvent<ContractAbi<TContractName>, TEventName> = ExtractAbiEvent<
-    ContractAbi<TContractName>,
-    TEventName
-  >,
-> = {
-  contractName: TContractName;
-  eventName: TEventName;
-  chainId?: AllowedChainIds;
-} & IsContractDeclarationMissing<
-  Omit<UseWatchContractEventParameters, "onLogs" | "address" | "abi" | "eventName"> & {
-    onLogs: (
-      logs: Simplify<
-        Omit<Log<bigint, number, any>, "args" | "eventName"> & {
-          args: Record<string, unknown>;
-          eventName: string;
-        }
-      >[],
-    ) => void;
-  },
-  Omit<UseWatchContractEventParameters<ContractAbi<TContractName>>, "onLogs" | "address" | "abi" | "eventName"> & {
-    onLogs: (
-      logs: Simplify<
-        Omit<Log<bigint, number, false, TEvent, false, [TEvent], TEventName>, "args"> & {
-          args: AbiParametersToPrimitiveTypes<TEvent["inputs"]> &
-            GetEventArgs<
-              ContractAbi<TContractName>,
-              TEventName,
-              {
-                IndexedOnly: false;
-              }
-            >;
-        }
-      >[],
-    ) => void;
-  }
->;
+// export type UseScaffoldEventConfig<
+//   TContractName extends ContractName,
+//   TEventName extends ExtractAbiEventNames<ContractAbi<TContractName>>,
+//   TEvent extends ExtractAbiEvent<ContractAbi<TContractName>, TEventName> = ExtractAbiEvent<
+//     ContractAbi<TContractName>,
+//     TEventName
+//   >,
+// > = {
+//   contractName: TContractName;
+//   eventName: TEventName;
+//   chainId?: AllowedChainIds;
+// } & IsContractDeclarationMissing<
+//   Omit<UseWatchContractEventParameters, "onLogs" | "address" | "abi" | "eventName"> & {
+//     onLogs: (
+//       logs: Simplify<
+//         Omit<Log<bigint, number, any>, "args" | "eventName"> & {
+//           args: Record<string, unknown>;
+//           eventName: string;
+//         }
+//       >[],
+//     ) => void;
+//   },
+//   Omit<UseWatchContractEventParameters<ContractAbi<TContractName>>, "onLogs" | "address" | "abi" | "eventName"> & {
+//     onLogs: (
+//       logs: Simplify<
+//         Omit<Log<bigint, number, false, TEvent, false, [TEvent], TEventName>, "args"> & {
+//           args: AbiParametersToPrimitiveTypes<TEvent["inputs"]> &
+//             GetEventArgs<
+//               ContractAbi<TContractName>,
+//               TEventName,
+//               {
+//                 IndexedOnly: false;
+//               }
+//             >;
+//         }
+//       >[],
+//     ) => void;
+//   }
+// >;
 
 type IndexedEventInputs<
   TContractName extends ContractName,
@@ -404,21 +403,21 @@ export const getParsedErrorWithAllAbis = (error: any, chainId: AllowedChainIds):
   return originalParsedError;
 };
 
-export const simulateContractWriteAndNotifyError = async ({
-  wagmiConfig,
-  writeContractParams: params,
-  chainId,
-}: {
-  wagmiConfig: Config;
-  writeContractParams: WriteContractVariables<Abi, string, any[], Config, number>;
-  chainId: AllowedChainIds;
-}) => {
-  try {
-    await simulateContract(wagmiConfig, params);
-  } catch (error) {
-    const parsedError = getParsedErrorWithAllAbis(error, chainId);
+// export const simulateContractWriteAndNotifyError = async ({
+//   wagmiConfig,
+//   writeContractParams: params,
+//   chainId,
+// }: {
+//   wagmiConfig: Config;
+//   writeContractParams: WriteContractVariables<Abi, string, any[], Config, number>;
+//   chainId: AllowedChainIds;
+// }) => {
+//   try {
+//     await simulateContract(wagmiConfig, params);
+//   } catch (error) {
+//     const parsedError = getParsedErrorWithAllAbis(error, chainId);
 
-    notification.error(parsedError);
-    throw error;
-  }
-};
+//     notification.error(parsedError);
+//     throw error;
+//   }
+// };

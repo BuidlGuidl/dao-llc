@@ -5,10 +5,10 @@ import { InheritanceTooltip } from "./InheritanceTooltip";
 import { displayTxResult } from "./utilsDisplay";
 import { Abi, AbiFunction } from "abitype";
 import { Address } from "viem";
-import { useReadContract } from "wagmi";
+// import { useReadContract } from "wagmi"; // Removed wagmi dependency
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useAnimationConfig } from "~~/hooks/scaffold-eth";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+// import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
 type DisplayVariableProps = {
@@ -20,34 +20,38 @@ type DisplayVariableProps = {
 };
 
 export const DisplayVariable = ({
-  contractAddress,
+  // contractAddress,
   abiFunction,
   refreshDisplayVariables,
-  abi,
+  // abi,
   inheritedFrom,
 }: DisplayVariableProps) => {
-  const { targetNetwork } = useTargetNetwork();
+  // const { targetNetwork } = useTargetNetwork();
 
-  const {
-    data: result,
-    isFetching,
-    refetch,
-    error,
-  } = useReadContract({
-    address: contractAddress,
-    functionName: abiFunction.name,
-    abi: abi,
-    chainId: targetNetwork.id,
-    query: {
-      retry: false,
-    },
-  });
+  // const {
+  //   data: result,
+  //   isFetching,
+  //   refetch,
+  //   error,
+  // } = useReadContract({
+  //   address: contractAddress,
+  //   functionName: abiFunction.name,
+  //   abi: abi,
+  //   chainId: targetNetwork.id,
+  //   query: {
+  //     retry: false,
+  //   },
+  // });
+  const result = null;
+  const isFetching = false;
+  const refetch = async () => {};
+  const error = null;
 
   const { showAnimation } = useAnimationConfig(result);
 
   useEffect(() => {
-    refetch();
-  }, [refetch, refreshDisplayVariables]);
+    // refetch();
+  }, [refreshDisplayVariables]);
 
   useEffect(() => {
     if (error) {

@@ -1,43 +1,46 @@
-import { connectorsForWallets } from "@rainbow-me/rainbowkit";
-import {
-  coinbaseWallet,
-  ledgerWallet,
-  metaMaskWallet,
-  rainbowWallet,
-  safeWallet,
-  walletConnectWallet,
-} from "@rainbow-me/rainbowkit/wallets";
-import { rainbowkitBurnerWallet } from "burner-connector";
-import * as chains from "viem/chains";
-import scaffoldConfig from "~~/scaffold.config";
+// import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+// import {
+//   coinbaseWallet,
+//   ledgerWallet,
+//   metaMaskWallet,
+//   rainbowWallet,
+//   safeWallet,
+//   walletConnectWallet,
+// } from "@rainbow-me/rainbowkit/wallets";
+// import { rainbowkitBurnerWallet } from "burner-connector";
+// import * as chains from "viem/chains";
+// import scaffoldConfig from "~~/scaffold.config";
 
-const { onlyLocalBurnerWallet, targetNetworks } = scaffoldConfig;
+// const { onlyLocalBurnerWallet, targetNetworks } = scaffoldConfig;
 
-const wallets = [
-  metaMaskWallet,
-  walletConnectWallet,
-  ledgerWallet,
-  coinbaseWallet,
-  rainbowWallet,
-  safeWallet,
-  ...(!targetNetworks.some(network => network.id !== (chains.hardhat as chains.Chain).id) || !onlyLocalBurnerWallet
-    ? [rainbowkitBurnerWallet]
-    : []),
-];
+// const wallets = [
+//   metaMaskWallet,
+//   walletConnectWallet,
+//   ledgerWallet,
+//   coinbaseWallet,
+//   rainbowWallet,
+//   safeWallet,
+//   ...(!targetNetworks.some(network => network.id !== (chains.hardhat as chains.Chain).id) || !onlyLocalBurnerWallet
+//     ? [rainbowkitBurnerWallet]
+//     : []),
+// ];
 
 /**
  * wagmi connectors for the wagmi context
+ * Note: Wallet functionality has been removed, so this returns null.
  */
-export const wagmiConnectors = connectorsForWallets(
-  [
-    {
-      groupName: "Supported Wallets",
-      wallets,
-    },
-  ],
+// export const wagmiConnectors = connectorsForWallets(
+//   [
+//     {
+//       groupName: "Supported Wallets",
+//       wallets,
+//     },
+//   ],
 
-  {
-    appName: "scaffold-eth-2",
-    projectId: scaffoldConfig.walletConnectProjectId,
-  },
-);
+//   {
+//     appName: "scaffold-eth-2",
+//     projectId: scaffoldConfig.walletConnectProjectId,
+//   },
+// );
+
+export const wagmiConnectors = null; // Placeholder since wallet functionality is removed

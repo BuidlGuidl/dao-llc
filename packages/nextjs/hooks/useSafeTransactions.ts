@@ -29,6 +29,7 @@ export const useSafeTransactions = (): UseSafeTransactionsReturn => {
     const fetchTransactions = async () => {
       // Only run on client side
       if (typeof window === "undefined") {
+        setLoading(false);
         return;
       }
 
@@ -38,16 +39,23 @@ export const useSafeTransactions = (): UseSafeTransactionsReturn => {
 
         // Fetch transactions from our API route
         const response = await fetch("/api/transactions");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
-        if (response.ok && data.transactions) {
+        if (data.transactions) {
           setTransactions(data.transactions);
         } else {
           setError(data.error || "Failed to fetch transactions");
         }
       } catch (err) {
-        setError("Failed to fetch transactions");
         console.error("Error fetching transactions:", err);
+        setError("Failed to fetch transactions");
+        // Set empty transactions array to prevent layout issues
+        setTransactions([]);
       } finally {
         setLoading(false);
       }

@@ -69,7 +69,7 @@ export const Header = () => {
           </ul>
         </details>
         <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-          <div className="flex relative w-24 h-24">
+          <div className="flex relative w-12 h-12">
             <Image alt="DAO logo" className="cursor-pointer object-contain" fill src="/logo.png" />
           </div>
           <div className="flex flex-col gap-0">
