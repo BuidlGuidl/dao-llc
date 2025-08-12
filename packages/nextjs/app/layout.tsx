@@ -20,6 +20,7 @@ export const metadata = getMetadata({
   title: "BuidlGuidl DAO",
   description:
     "Fund developers building intentional tutorials, components, and projects to improve scaffold-eth and the greater Ethereum ecosystem.",
+  imageRelativePath: "/DAO_unfurl.png",
 });
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
