@@ -1,6 +1,6 @@
 export const formatEther = (wei: string): string => {
   const ether = parseFloat(wei) / Math.pow(10, 18);
-  return ether.toFixed(4);
+  return ether.toFixed(2);
 };
 
 export const formatAddress = (address: string): string => {
@@ -34,7 +34,11 @@ export const formatExecutionDate = (timestamp: string): string => {
     } else if (diffInHours < 24) {
       return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
     } else if (diffInHours < 48) {
-      return "Yesterday";
+      const timeStr = date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return `Yesterday at ${timeStr}`;
     } else {
       return date.toLocaleDateString("en-US", {
         month: "short",
@@ -54,12 +58,12 @@ export const getTransactionTitle = (transaction: any): string => {
   if (transaction.safeTxHash) {
     if (transaction.isExecuted) {
       if (transaction.isSuccessful) {
-        return "✅ Safe Transaction Executed";
+        return "✅ Executed";
       } else {
-        return "❌ Safe Transaction Failed";
+        return "❌ Failed";
       }
     } else {
-      return "⏳ Safe Transaction Pending";
+      return "⏳ Pending";
     }
   }
 
@@ -77,6 +81,29 @@ export const getTransactionTitle = (transaction: any): string => {
 export const getTransactionDescription = (transaction: any): string => {
   // Check if it's a Safe transaction
   if (transaction.safeTxHash) {
+    // Check for specific contract interactions FIRST (before other logic)
+    if (transaction.to) {
+      const toAddress = transaction.to.toLowerCase();
+
+      // ETH splitter contract
+      if (toAddress === "0x92a66a3e5f8da48b17eb48825487a1698d1c5519") {
+        return "Split ETH";
+      }
+
+      // DAI contract - check if this is filling ETH streams
+      if (toAddress === "0x6b175474e89094c44da98b954eedeac495271d0f") {
+        return "Fill ETH Streams";
+      }
+    }
+
+    // Check if "swap" is mentioned anywhere in the origin data
+    if (transaction.origin) {
+      const originStr = JSON.stringify(transaction.origin).toLowerCase();
+      if (originStr.includes("swap")) {
+        return "Swap";
+      }
+    }
+
     if (transaction.internalTransactions && transaction.internalTransactions.length > 0) {
       const internal = transaction.internalTransactions[0];
       if (internal.type === "call") {
@@ -92,7 +119,30 @@ export const getTransactionDescription = (transaction: any): string => {
       return `Method: ${transaction.methodName}`;
     }
 
-    // Fix: Use the length of confirmations array instead of the array itself
+    // Check if this looks like an ETH distribution/splitter transaction
+    const hasValue = transaction.value && parseFloat(transaction.value) > 0;
+    const hasInternalTxs = transaction.internalTransactions && transaction.internalTransactions.length > 0;
+
+    if (hasValue || hasInternalTxs) {
+      // Check internal transactions for multiple recipients (splitter pattern)
+      if (hasInternalTxs && transaction.internalTransactions.length > 1) {
+        return "ETH distribution to multiple recipients";
+      } else if (hasInternalTxs && transaction.internalTransactions.length === 1) {
+        const internal = transaction.internalTransactions[0];
+        if (parseFloat(internal.value) > 0) {
+          return "ETH Transfer";
+        }
+      } else if (hasValue) {
+        return "ETH Transfer";
+      }
+    }
+
+    // Generic contract interaction for other addresses
+    if (transaction.to && transaction.to.toLowerCase() !== transaction.from) {
+      return "Contract interaction";
+    }
+
+    // Final fallback with confirmation count
     const confirmationsCount = Array.isArray(transaction.confirmations) ? transaction.confirmations.length : 0;
     return `Safe transaction (${confirmationsCount}/${transaction.confirmationsRequired} confirmations)`;
   }
@@ -108,35 +158,28 @@ export const getTransactionDescription = (transaction: any): string => {
   }
 };
 
-export const getTransactionExecutor = (transaction: any): string => {
+export const getTransactionExecutor = (transaction: any): string | null => {
   try {
-    if (transaction?.safeTxHash && transaction?.confirmationDetails && Array.isArray(transaction.confirmationDetails)) {
-      // For Safe transactions, we need to look at the confirmation details
-      // The executor is typically the last person to confirm before execution
-      const confirmations = transaction.confirmationDetails;
-
-      // If there are confirmations, get the last one (the executor)
-      if (confirmations.length > 0) {
-        const lastConfirmation = confirmations[confirmations.length - 1];
-        if (lastConfirmation?.owner) {
-          return resolveENSName(lastConfirmation.owner);
-        }
+    // For Safe transactions, only use actualExecutor field set by the API
+    if (transaction?.safeTxHash) {
+      // Only use the actualExecutor field - don't fallback to confirmations
+      if (transaction?.actualExecutor) {
+        return resolveENSName(transaction.actualExecutor);
       }
 
-      // If no confirmations found, try to get from internal transactions
-      if (transaction.internalTransactions && transaction.internalTransactions.length > 0) {
-        const internal = transaction.internalTransactions[0];
-        if (internal.from && internal.from !== transaction.from) {
-          return resolveENSName(internal.from);
-        }
-      }
+      // If no actualExecutor, return null (hide "Proposed by" line)
+      return null;
     }
   } catch (error) {
-    console.error("Error getting transaction executor:", error);
+    console.error("Error getting transaction proposer:", error);
   }
 
-  // Fallback to transaction from address
-  return resolveENSName(transaction?.from || "Unknown");
+  // Fallback to transaction from address (for non-Safe transactions)
+  const fallbackName = resolveENSName(transaction?.from || "Unknown");
+  if (fallbackName === "Unknown" || fallbackName === "N/A" || fallbackName.includes("...")) {
+    return null;
+  }
+  return fallbackName;
 };
 
 const resolveENSName = (address: string): string => {
@@ -146,7 +189,7 @@ const resolveENSName = (address: string): string => {
     "0x34aa3f359a9d614239015126635ce7732c18fdf3": "austingriffith.eth",
     "0x630ddbe2a248e6f483fd021c13617421b476ae92": "buidlguidl.carletex.eth",
     // Actual executor addresses from the debug output
-    "0x11e91fb4793047a68dfff29158387229ea313ffe": "BuidlGuidl.ZakGriffith.eth",
+    "0x11e91fb4793047a68dfff29158387229ea313ffe": "buidlguidl.zakgriffith.eth",
     "0x466bfa89bc742c840bc4660890d679d96d65613c": "sign.spencerfaber.eth",
     "0xb4f53bd85c00ef22946d24ae26bc38ac64f5e7b1": "pabl0cks.eth",
     "0x699bfac97c962db31238b429ceaf6734c492d61c": "baluu.eth",
@@ -166,6 +209,32 @@ const resolveENSName = (address: string): string => {
 };
 
 export const getTransactionAmount = (transaction: any): string => {
+  // Check if this is a DAI transaction to ETH Streams
+  if (transaction.to && transaction.to.toLowerCase() === "0x6b175474e89094c44da98b954eedeac495271d0f") {
+    // For DAI transactions, we need to parse the transaction data to get the amount
+    if (transaction.dataDecoded && transaction.dataDecoded.parameters) {
+      // Look for common parameter names that might contain the DAI amount
+      const valueParam = transaction.dataDecoded.parameters.find(
+        (param: any) =>
+          param.name === "value" ||
+          param.name === "amount" ||
+          param.name === "_value" ||
+          param.name === "wad" ||
+          param.name === "_amount" ||
+          param.name === "tokens",
+      );
+
+      if (valueParam && valueParam.value) {
+        // Convert from DAI wei (18 decimals) to DAI
+        const daiAmount = parseFloat(valueParam.value) / Math.pow(10, 18);
+        return Math.round(daiAmount).toLocaleString("en-US");
+      }
+    }
+
+    // Fallback for DAI transactions without decoded data
+    return "0";
+  }
+
   // Check for internal transactions first (these contain the actual amounts)
   if (transaction.internalTransactions && transaction.internalTransactions.length > 0) {
     const internal = transaction.internalTransactions[0];

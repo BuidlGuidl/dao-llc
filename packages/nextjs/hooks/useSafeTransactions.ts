@@ -12,6 +12,12 @@ interface Transaction {
   txreceipt_status: string;
   methodId: string;
   functionName: string;
+  nonce: number; // Safe transaction nonce
+  transactionHash?: string; // Actual Ethereum transaction hash for Etherscan
+  actualExecutor?: string; // The person who actually executed the transaction on-chain
+  executorType?: "proposer" | "executor" | null; // Whether to show "Proposed by" or "Executed by"
+  proposer?: string; // The person who proposed the transaction
+  executor?: string; // The person who executed the transaction
 }
 
 interface UseSafeTransactionsReturn {

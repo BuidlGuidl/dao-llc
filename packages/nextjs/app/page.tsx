@@ -158,26 +158,60 @@ const Home: NextPage = () => {
               {!loading &&
                 !error &&
                 transactions.map(tx => (
-                  <div key={tx.hash} className="bg-base-100 p-6 rounded-3xl shadow-lg">
+                  <div key={tx.hash} className="bg-base-100 p-3 rounded-xl shadow-lg">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-bold">{getTransactionTitle(tx)}</h3>
-                        <p className="text-sm text-base-content/70">{getTransactionDescription(tx)}</p>
-                        <p className="text-xs text-base-content/60 mt-1">Executed by {getTransactionExecutor(tx)}</p>
+                        <h3 className="text-sm leading-tight">
+                          <span className="font-bold">
+                            {tx.nonce} - {getTransactionTitle(tx)}
+                          </span>
+                          <span className="text-base-content/70"> - {formatExecutionDate(tx.timeStamp)}</span>
+                        </h3>
+                        <p className="text-xs text-base-content/70 leading-tight">{getTransactionDescription(tx)}</p>
+                        <div className="text-xs text-base-content/60 leading-tight">
+                          {getTransactionExecutor(tx) && (
+                            <>
+                              <span>
+                                {tx.executorType === "executor" ? "Executed by" : "Proposed by"}{" "}
+                                {getTransactionExecutor(tx)}
+                              </span>
+                              {(tx.hash || tx.transactionHash) && <span className="mx-2">•</span>}
+                            </>
+                          )}
+                          {tx.hash && (
+                            <>
+                              <a
+                                href={`https://app.safe.global/transactions/tx?safe=eth:0xeF899e80aA814ab8D8e232f9Ed6403A633C727ec&id=multisig_0xeF899e80aA814ab8D8e232f9Ed6403A633C727ec_${tx.hash}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline"
+                              >
+                                View on Safe →
+                              </a>
+                              {tx.transactionHash && <span className="mx-2">•</span>}
+                            </>
+                          )}
+                          {tx.transactionHash && (
+                            <a
+                              href={`https://etherscan.io/tx/${tx.transactionHash}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline"
+                            >
+                              View on Etherscan →
+                            </a>
+                          )}
+                        </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-success">{getTransactionAmount(tx)} ETH</p>
-                        <p className="text-xs text-base-content/70">{formatExecutionDate(tx.timeStamp)}</p>
+                        <p className="font-bold text-success text-sm leading-tight">
+                          {getTransactionAmount(tx)}{" "}
+                          {tx.to && tx.to.toLowerCase() === "0x6b175474e89094c44da98b954eedeac495271d0f"
+                            ? "DAI"
+                            : "ETH"}
+                        </p>
                       </div>
                     </div>
-                    <a
-                      href={`https://etherscan.io/tx/${tx.hash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline text-xs mt-2 inline-block"
-                    >
-                      View on Etherscan →
-                    </a>
                   </div>
                 ))}
             </div>
