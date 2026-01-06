@@ -188,7 +188,6 @@ const resolveENSName = (address: string): string => {
     "0xef899e80aa814ab8d8e232f9ed6403a633c727ec": "BuidlGuidl Safe",
     "0x34aa3f359a9d614239015126635ce7732c18fdf3": "austingriffith.eth",
     "0x630ddbe2a248e6f483fd021c13617421b476ae92": "buidlguidl.carletex.eth",
-    // Actual executor addresses from the debug output
     "0x11e91fb4793047a68dfff29158387229ea313ffe": "buidlguidl.zakgriffith.eth",
     "0x466bfa89bc742c840bc4660890d679d96d65613c": "sign.spencerfaber.eth",
     "0xb4f53bd85c00ef22946d24ae26bc38ac64f5e7b1": "pabl0cks.eth",
