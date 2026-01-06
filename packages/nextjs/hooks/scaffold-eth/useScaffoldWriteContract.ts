@@ -2,7 +2,7 @@
  * Hook to write contract data.
  * Note: Wallet functionality has been removed, so this returns a placeholder.
  */
-export const useScaffoldWriteContract = (config: any) => {
+export const useScaffoldWriteContract = (_config: any) => {
   return {
     data: null,
     isError: false,
